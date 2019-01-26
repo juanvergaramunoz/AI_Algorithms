@@ -20,6 +20,8 @@ The target of this project is to provide a set of Artificial Intelligence tools 
        - get_action(self, state, put_action)
        
        - min_val(self, state, alpha, beta, depth)
+       
+       - max_val(self, state, alpha, beta, depth)
 
 
 2) "Genetic Algorithm.ipynb" has the "n_queen_solver" Class -- FUNCTIONS:
