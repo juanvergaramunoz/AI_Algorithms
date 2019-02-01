@@ -34,8 +34,8 @@ class Tree_Node_Class:
     
     
     def backup_n_and_q(self, delta_q):
-        self.n_visited -= 1
-        self.q_value -= delta_q
+        self.n_visited += 1
+        self.q_value += delta_q
         return
     
     
