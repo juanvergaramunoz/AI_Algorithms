@@ -75,11 +75,12 @@ class Tree_Node_Class:
     
     
     
-class CustomPlayer:
-    """ MiniMax Agent. Could be used to play Isolation, Chess, Go,...
+class MCTSCustomPlayer:
+    """ MONTE CARLO TREE SEARCH Agent. Could be used to play Isolation,
+    Chess, Go,...
         
     There are several assumptions (in terms of classes and procesures) made.
-    This was required to show only the MiniMax part of the whole algorithm:
+    This was required to show only the MCTS part of the whole algorithm:
 
     **********************************************************************
     NOTE:
@@ -99,7 +100,7 @@ class CustomPlayer:
     **********************************************************************
     """
     
-    def get_action(self, state):
+    def get_action(self, state, put_function = queue.put):
         """ Calls put_action(ACTION) at least once, before the algorithm
         runs out of time (f.i: 2 secs). We assume the caller will be responsible
         for cutting off the function after the search time limit has expired.
@@ -112,10 +113,10 @@ class CustomPlayer:
         actions = state.actions()
         if len(actions) > 0:
             r_action = random.choice(actions)
-            self.queue.put(r_action)
+            put_function(r_action)
         else:
             r_action = 0
-            self.queue.put(r_action)
+            put_function(r_action)
             return
         
         MC_Tree_Node = Tree_Node_Class(state, actions)
@@ -133,19 +134,23 @@ class CustomPlayer:
             r_node = self.BestChild(MC_Tree_Node, 0)
             if r_node != None:
                 r_action = r_node.action
-                self.queue.put(r_action)
+                put_function(r_action)
         
         r_node = self.BestChild(MC_Tree_Node, 0)
         if r_node != None:
             r_action = r_node.action
-            self.queue.put(r_action)
+            put_function(r_action)
         
         return
     
     
     
     def TreePolicy(self, node):
-        """ 
+        """ This function is the main part of the Monte Carlo Tree Search (MCTS)
+        It starts with the root node, and expands until all actions have been
+        explored. From there, it starts selecting the following action with a better
+        performance (more winnings encountered). The process is repeated, and
+        the tree is always expanded towards the most promising node.
         """
         
         current_node = node
@@ -162,7 +167,13 @@ class CustomPlayer:
     
     
     def Expand(self, node):
-        """ 
+        """ This node is the one in charge of the expansion. The main idea is to
+        take one non-explored action for the Node passed as a parameter, and
+        expand the Tree accordingly. To keep things simple, we have opted to
+        maintain the core operations inside the TREE_NODE_CLASS. In the end, all
+        the information required is already stored inside the object anyway:
+        The object is the one that has the list of non-used actions, and selects
+        one of them randomly.
         """
         
         current_node = node
@@ -174,7 +185,9 @@ class CustomPlayer:
     
     
     def BestChild(self, parent, cost):
-        """ 
+        """ This function is the one in charge of picking up the most valuable
+        children for the node passed. It is used to pick the best action from
+        the root node, but also to pick the best node to expand for a given node.
         """
         
         max_val = float("-inf")
@@ -193,7 +206,19 @@ class CustomPlayer:
     
     
     def DefaultPolicy(self, state):
-        """ 
+        """ Default Policy is the function in charge of simulating the data.
+        It takes random actions from the state given until it reaches a final
+        state. Then, the result for the PARENT of the state is returned.
+        In this implementation, winnings and losses from one state are referred
+        to its parent, that is why the logic is inverse (winning has a lower
+        score than losing).
+        
+        **********************************************************************
+        NOTE:
+        - STATE.utility(player): Function that returns "+inf" for a winning
+        scenario for 'PLAYER' [A BOOLEAN], "-inf" for a losing scenario for
+        'PLAYER'.
+        **********************************************************************
         """
         new_state = state
         #
@@ -214,7 +239,14 @@ class CustomPlayer:
     
     
     def Backup(self, node, delta):
-        """ 
+        """ This function is the one that stores the information collected for
+        each new node expanded and its subsequent parents. It receives the node
+        and the winning or loss value (+1 or -1), updates the Q and N values for
+        that node, and moves into its parent.
+        
+        The main updating is carried out by the TREE_NODE_CLASS. This is the
+        one that performs the inner update with the previous information that
+        it already has stored internally (as elements inside the object node).
         """
         
         current_node = node
