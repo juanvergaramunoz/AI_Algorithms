@@ -22,7 +22,7 @@ The target of this project is to provide a set of Artificial Intelligence tools 
             Read document for more detail
             
             STATE: Refers to an object that contains all information about the current board (state)
-            PUT_ACTION: A function that is called with the chosen action as a parameter
+            PUT_ACTION: A function that is used to pass the chosen action as a parameter
        
        - min_val(self, state, alpha, beta, depth)  [INTERNAL FUNCTION]
        
@@ -59,6 +59,29 @@ The target of this project is to provide a set of Artificial Intelligence tools 
             It executes the algorithm for the consecutive generations desired
             
             N_GENERATIONS: INTEGER - Amount of times to execute the algorithm [f.i: 100]
+
+
+3) "Monte Carlo Tree Search Algorithm.py" has the "MCTSCustomPlayer" Class -- FUNCTIONS:
+    
+       - get_action(self, state, put_function)  [USER FUNCTION]
+            It provides the Monte Carlo Tree Search agent. Some assumptions are made:
+            Read document for more detail
+            
+            STATE: Refers to an object that contains all information about the current board (state)
+            PUT_ACTION: A function that is used to pass the chosen action as a parameter
+       
+       - TreePolicy(self, node)  [INTERNAL FUNCTION]
+       
+       - Expand(self, node)  [INTERNAL FUNCTION]
+       
+       - BestChild(self, parent, cost)  [INTERNAL FUNCTION]
+       
+       - DefaultPolicy(self, state)  [INTERNAL FUNCTION]
+       
+       - Backup(self, node, delta)  [INTERNAL FUNCTION]
+       
+       
+       
  
  
 
