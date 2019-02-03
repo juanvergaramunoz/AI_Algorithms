@@ -7,7 +7,7 @@ class CustomPlayer:
 
     **********************************************************************
     NOTE:
-    - A function is called to select the action - f.i: "queue.put(ACTION)"
+    - A function is called to select the action - f.i: "put_action(ACTION)"
     - It can be called several times
     - The last one put before the timer goes off (f.i: 2 secs) is the one selected
     - We assume the function calling is the one that takes care of the timer from
